@@ -14,7 +14,26 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result. Use localhost for development so Hot Module Replacement (HMR) works; opening the app via your machine's IP (e.g. http://192.168.x.x:3000) can cause WebSocket HMR errors.
+
+### Database migrations (Supabase)
+
+To apply migrations to your Supabase database:
+
+1. **Link the project** (one time):
+   ```bash
+   npx supabase login
+   npx supabase link --project-ref YOUR_PROJECT_REF
+   ```
+   Get `YOUR_PROJECT_REF` from the Supabase Dashboard → Project Settings → General (e.g. `abcdefghijklmnop`).
+
+2. **Push migrations**:
+   ```bash
+   npm run db:push
+   ```
+   Or: `npx supabase db push`
+
+Migrations run in order: `00001_initial_schema.sql` through `00005_storage_buckets_and_policies.sql`. If the project is not linked, run the SQL files manually in the Supabase Dashboard → SQL Editor in that order.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
