@@ -21,7 +21,12 @@ export async function TrainersSection() {
     console.error("TrainersSection fetch error:", error);
   }
 
-  const trainers = (data ?? []) as TrainerProfileRow[];
+  const raw = data ?? [];
+  const trainers: TrainerProfileRow[] = raw.map((row) => {
+    const loc = row.locations;
+    const location = Array.isArray(loc) ? loc[0] ?? null : loc;
+    return { ...row, locations: location } as TrainerProfileRow;
+  });
 
   if (trainers.length === 0) return null;
 
