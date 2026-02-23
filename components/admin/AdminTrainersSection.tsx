@@ -37,17 +37,24 @@ type TrainerRow = {
   image_url: string | null;
   specialties: string[];
   sort_order: number;
+  location_id: string | null;
+  instagram_url: string | null;
+  facebook_url: string | null;
+  twitter_url: string | null;
+  tiktok_url: string | null;
   profiles: { full_name: string | null; email: string | null } | null;
 };
 
 type ProfileOption = { id: string; full_name: string | null; email: string | null };
+type LocationOption = { id: string; name: string };
 
 type AdminTrainersSectionProps = {
   trainers: TrainerRow[];
   profiles: ProfileOption[];
+  locations: LocationOption[];
 };
 
-export function AdminTrainersSection({ trainers, profiles }: AdminTrainersSectionProps) {
+export function AdminTrainersSection({ trainers, profiles, locations }: AdminTrainersSectionProps) {
   const router = useRouter();
   const [createOpen, setCreateOpen] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -144,7 +151,7 @@ export function AdminTrainersSection({ trainers, profiles }: AdminTrainersSectio
           <DialogHeader>
             <DialogTitle>Add trainer</DialogTitle>
           </DialogHeader>
-          <TrainerForm profiles={profiles} onSuccess={handleCreateSuccess} />
+          <TrainerForm profiles={profiles} locations={locations} onSuccess={handleCreateSuccess} />
         </DialogContent>
       </Dialog>
 
@@ -163,8 +170,14 @@ export function AdminTrainersSection({ trainers, profiles }: AdminTrainersSectio
                 image_url: editingRow.image_url ?? "",
                 specialties: (editingRow.specialties ?? []).join(", "),
                 sort_order: editingRow.sort_order,
+                location_id: editingRow.location_id ?? "",
+                instagram_url: editingRow.instagram_url ?? "",
+                facebook_url: editingRow.facebook_url ?? "",
+                twitter_url: editingRow.twitter_url ?? "",
+                tiktok_url: editingRow.tiktok_url ?? "",
               }}
               profiles={profiles}
+              locations={locations}
               onSuccess={handleEditSuccess}
             />
           )}

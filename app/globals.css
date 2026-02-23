@@ -1,78 +1,81 @@
 @import "tailwindcss";
 
+/* Use class-based dark mode so the theme toggle (next-themes) applies MotiveMuscle dark colors */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --radius: 0.625rem;
-  /* Light theme: soft off-white background to reduce glare, dark navy text for clear contrast */
+  /* Light theme: MotiveMuscle – soft off-white, orange primary accent */
   --background: #f8fafc;
   --foreground: #0f172a;
   --card: #ffffff;
   --card-foreground: #0f172a;
   --popover: #ffffff;
   --popover-foreground: #0f172a;
-  --primary: #2EC4B6;
+  --primary: #FF6B00;
   --primary-foreground: #ffffff;
-  --primary-hover: #1AB3A0;
-  --secondary: #E6F3FF;
+  --primary-hover: #E85D04;
+  --secondary: #FFF4ED;
   --secondary-foreground: #0f172a;
   --muted: #f1f5f9;
   --muted-foreground: #475569;
-  --accent: #E6F3FF;
+  --accent: #FFF4ED;
   --accent-foreground: #0f172a;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: #ffffff;
   --border: #e2e8f0;
   --input: #e2e8f0;
-  --ring: #2EC4B6;
-  --chart-1: #2EC4B6;
+  --ring: #FF6B00;
+  --chart-1: #FF6B00;
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
   --sidebar: #f1f5f9;
   --sidebar-foreground: #0f172a;
-  --sidebar-primary: #2EC4B6;
+  --sidebar-primary: #FF6B00;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #E6F3FF;
+  --sidebar-accent: #FFF4ED;
   --sidebar-accent-foreground: #0f172a;
   --sidebar-border: #e2e8f0;
-  --sidebar-ring: #2EC4B6;
+  --sidebar-ring: #FF6B00;
 }
 
 .dark {
-  /* Dark theme: navy background, near-white text, teal primary, light blue accent */
-  --background: #1F2A37;
-  --foreground: #ECEFF4;
-  --card: #2a3847;
-  --card-foreground: #ECEFF4;
-  --popover: #2a3847;
-  --popover-foreground: #ECEFF4;
-  --primary: #2EC4B6;
+  /* Dark theme: MotiveMuscle – dark grey background, white text, orange primary */
+  --background: #1a1a1a;
+  --foreground: #ffffff;
+  --card: #252525;
+  --card-foreground: #ffffff;
+  --popover: #252525;
+  --popover-foreground: #ffffff;
+  --primary: #FF6B00;
   --primary-foreground: #ffffff;
-  --primary-hover: #1AB3A0;
-  --secondary: #243040;
-  --secondary-foreground: #ECEFF4;
-  --muted: #243040;
-  --muted-foreground: #6B7580;
-  --accent: #E6F3FF;
-  --accent-foreground: #1F2A37;
+  --primary-hover: #E85D04;
+  --secondary: #2a2a2a;
+  --secondary-foreground: #ffffff;
+  --muted: #2a2a2a;
+  --muted-foreground: #cccccc;
+  --accent: #2a2a2a;
+  --accent-foreground: #ffffff;
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: #ffffff;
   --border: rgba(255 255 255 / 10%);
   --input: rgba(255 255 255 / 15%);
-  --ring: #2EC4B6;
-  --chart-1: #2EC4B6;
+  --ring: #FF6B00;
+  --chart-1: #FF6B00;
   --chart-2: oklch(0.696 0.17 162.48);
   --chart-3: oklch(0.769 0.188 70.08);
   --chart-4: oklch(0.627 0.265 303.9);
   --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: #2a3847;
-  --sidebar-foreground: #ECEFF4;
-  --sidebar-primary: #2EC4B6;
+  --sidebar: #252525;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #FF6B00;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent: #E6F3FF;
-  --sidebar-accent-foreground: #1F2A37;
+  --sidebar-accent: #2a2a2a;
+  --sidebar-accent-foreground: #ffffff;
   --sidebar-border: rgba(255 255 255 / 10%);
-  --sidebar-ring: #2EC4B6;
+  --sidebar-ring: #FF6B00;
 }
 
 @theme inline {
@@ -118,10 +121,36 @@
   --font-mono: ui-monospace, monospace;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), sans-serif;
+}
+
+/* Skip link: visible on focus for keyboard users */
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  font-weight: 500;
+  border-radius: 0 0 0.25rem 0;
+  transform: translateY(-100%);
+  transition: transform 0.2s ease;
+}
+.skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
 }
 
 .font-sans {

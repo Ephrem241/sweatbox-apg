@@ -41,5 +41,5 @@ export const GALLERY_IMAGES: GalleryImage[] = [
   { src: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=800&q=80", alt: "Strength training", width: 800, height: 600 },
   { src: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?w=800&q=80", alt: "Boxing bag", width: 800, height: 600 },
   { src: "https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=800&q=80", alt: "Fitness class", width: 800, height: 600 },
-  { src: "https://images.unsplash.com/photo-1581009146145-b5ef050c149e?w=800&q=80", alt: "Woman training", width: 800, height: 600 },
+  { src: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=800&q=80", alt: "Woman training", width: 800, height: 600 },
 ];

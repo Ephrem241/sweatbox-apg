@@ -30,7 +30,13 @@ const gymSchema = {
       closes: "22:00",
     },
   ],
-  sameAs: ["https://instagram.com/sweatboxapg"],
+  sameAs: [
+    "https://instagram.com/sweatboxapg",
+    "https://facebook.com/sweatboxapg",
+    "https://twitter.com/sweatboxapg",
+    "https://youtube.com/@sweatboxapg",
+    "https://tiktok.com/@sweatboxapg",
+  ],
 };
 
 export function JsonLdGym() {

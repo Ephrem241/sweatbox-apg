@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { Dumbbell } from "lucide-react";
 import { HERO_SLIDES } from "@/lib/brand-images";
 
 const SLIDE_DURATION_MS = 5000;
@@ -52,7 +53,8 @@ export function HeroVideoSlider() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
       >
-        <h1 className="font-display text-3xl font-bold tracking-tight text-white drop-shadow-md sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
+        <Dumbbell className="mx-auto size-8 text-primary drop-shadow-md sm:size-10" aria-hidden />
+        <h1 className="mt-2 font-display text-3xl font-bold tracking-tight text-white drop-shadow-md sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl">
           {t("heroTitle")}
         </h1>
         <p className="mt-3 text-lg font-medium text-white/95 sm:text-xl">

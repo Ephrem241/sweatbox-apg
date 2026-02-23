@@ -29,6 +29,11 @@ export type TrainerInput = {
   image_url?: string | null;
   specialties: string[]; // or comma-separated string
   sort_order: number;
+  location_id?: string | null;
+  instagram_url?: string | null;
+  facebook_url?: string | null;
+  twitter_url?: string | null;
+  tiktok_url?: string | null;
 };
 
 export async function createTrainerAction(input: TrainerInput): Promise<TrainerActionResult> {
@@ -48,8 +53,15 @@ export async function createTrainerAction(input: TrainerInput): Promise<TrainerA
     image_url: input.image_url?.trim() || null,
     specialties,
     sort_order: Number(input.sort_order) || 0,
+    location_id: input.location_id?.trim() || null,
+    instagram_url: input.instagram_url?.trim() || null,
+    facebook_url: input.facebook_url?.trim() || null,
+    twitter_url: input.twitter_url?.trim() || null,
+    tiktok_url: input.tiktok_url?.trim() || null,
   });
   if (error) return { error: error.message };
+  revalidatePath("/");
+  revalidatePath("/trainers");
   revalidatePath("/admin");
   revalidatePath("/admin/trainers");
   return { success: true };
@@ -76,9 +88,16 @@ export async function updateTrainerAction(input: UpdateTrainerInput): Promise<Tr
       image_url: input.image_url?.trim() || null,
       specialties,
       sort_order: Number(input.sort_order) || 0,
+      location_id: input.location_id?.trim() || null,
+      instagram_url: input.instagram_url?.trim() || null,
+      facebook_url: input.facebook_url?.trim() || null,
+      twitter_url: input.twitter_url?.trim() || null,
+      tiktok_url: input.tiktok_url?.trim() || null,
     })
     .eq("id", input.id);
   if (error) return { error: error.message };
+  revalidatePath("/");
+  revalidatePath("/trainers");
   revalidatePath("/admin");
   revalidatePath("/admin/trainers");
   return { success: true };
@@ -91,6 +110,8 @@ export async function deleteTrainerAction(id: string): Promise<TrainerActionResu
   const admin = createServiceRoleClient();
   const { error } = await admin.from("trainer_profiles").delete().eq("id", id);
   if (error) return { error: error.message };
+  revalidatePath("/");
+  revalidatePath("/trainers");
   revalidatePath("/admin");
   revalidatePath("/admin/trainers");
   return { success: true };

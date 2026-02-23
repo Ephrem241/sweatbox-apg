@@ -6,6 +6,7 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
+import { BackToTop } from "@/components/layout/BackToTop";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { JsonLdGym } from "@/components/seo/JsonLdGym";
 import "../globals.css";
@@ -50,10 +51,11 @@ export default async function LocaleLayout({ children, params }: Props) {
     <NextIntlClientProvider messages={messages} locale={locale}>
       <JsonLdGym />
       <Navbar />
-      <main className="flex-1">
+      <main id="main-content" className="flex-1">
         <TooltipProvider>{children}</TooltipProvider>
       </main>
       <Footer />
+      <BackToTop />
     </NextIntlClientProvider>
   );
 }

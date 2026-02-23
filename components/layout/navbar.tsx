@@ -40,6 +40,8 @@ function isGroupActive(pathname: string, links: readonly { href: string }[]): bo
   return links.some(({ href }) => isLinkActive(pathname, href));
 }
 
+const SCROLL_THRESHOLD = 8;
+
 export function Navbar() {
   const t = useTranslations("nav");
   const locale = useLocale();
@@ -47,9 +49,19 @@ export function Navbar() {
   const router = useRouter();
   const [auth, setAuth] = useState<AuthState>(null);
   const [mounted, setMounted] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    function onScroll() {
+      setScrolled(window.scrollY > SCROLL_THRESHOLD);
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -83,6 +95,9 @@ export function Navbar() {
   if (!mounted) {
     return (
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+        <a href="#main-content" className="skip-link">
+          {t("skipToMain")}
+        </a>
         <div className="container flex h-14 items-center justify-between px-4">
           <Link href="/" className="flex items-center gap-2 font-semibold text-foreground">
             {t("brand")}
@@ -97,7 +112,15 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <header
+      className={cn(
+        "sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 transition-shadow duration-200",
+        scrolled && "shadow-md"
+      )}
+    >
+      <a href="#main-content" className="skip-link">
+        {t("skipToMain")}
+      </a>
       <div className="container flex h-14 items-center justify-between px-4">
         <Link href="/" className="flex items-center gap-2 font-semibold text-foreground">
           {t("brand")}
@@ -115,8 +138,8 @@ export function Navbar() {
                   <NavigationMenuItem key={group.labelKey}>
                     <NavigationMenuTrigger
                       className={cn(
-                        "bg-transparent",
-                        groupActive && "text-primary"
+                        "bg-transparent text-primary",
+                        groupActive && "border-b-2 border-primary"
                       )}
                     >
                       {t(group.labelKey)}
@@ -227,17 +250,22 @@ export function Navbar() {
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[280px] sm:max-w-[280px]">
-              <SheetHeader>
+            <SheetContent side="left" className="flex w-[280px] flex-col sm:max-w-[280px]">
+              <SheetHeader className="shrink-0">
                 <SheetTitle>Menu</SheetTitle>
               </SheetHeader>
               <nav
-                className="flex flex-col gap-4 pt-4"
+                className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pt-4"
                 aria-label="Mobile navigation"
               >
-                {navGroups.map((group) => (
+                {navGroups.map((group) => {
+                  const groupActive = isGroupActive(pathname, group.links);
+                  return (
                   <div key={group.labelKey}>
-                    <p className="mb-1.5 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className={cn(
+                      "mb-1.5 px-3 text-xs font-semibold uppercase tracking-wider text-primary",
+                      groupActive && "border-l-2 border-primary pl-2.5"
+                    )}>
                       {t(group.labelKey)}
                     </p>
                     <div className="flex flex-col gap-0.5">
@@ -245,21 +273,29 @@ export function Navbar() {
                         const isActive = pathname === href || (href !== "/" && pathname.startsWith(href));
                         return (
                           <SheetClose asChild key={href}>
-                            <Link
-                              href={href}
+                            <div
                               className={cn(
                                 "flex min-h-[44px] w-full touch-manipulation items-center rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground",
-                                isActive ? "text-primary font-semibold bg-accent/50" : "text-foreground"
+                                isActive ? "bg-accent/50" : ""
                               )}
                             >
-                              {t(labelKey)}
-                            </Link>
+                              <Link
+                                href={href}
+                                className={cn(
+                                  "block w-full",
+                                  isActive ? "font-semibold text-primary" : "text-foreground"
+                                )}
+                              >
+                                {t(labelKey)}
+                              </Link>
+                            </div>
                           </SheetClose>
                         );
                       })}
                     </div>
                   </div>
-                ))}
+                  );
+                })}
                 {auth ? (
                   <>
                     <p className="mb-1.5 mt-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -267,31 +303,28 @@ export function Navbar() {
                     </p>
                     <div className="flex flex-col gap-0.5">
                       <SheetClose asChild>
-                        <Link
-                          href="/dashboard"
-                          className="flex min-h-[44px] w-full touch-manipulation items-center rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground text-foreground"
-                        >
-                          {t("dashboard")}
-                        </Link>
+                        <div className="flex min-h-[44px] w-full touch-manipulation items-center rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground">
+                          <Link href="/dashboard" className="block w-full text-foreground">
+                            {t("dashboard")}
+                          </Link>
+                        </div>
                       </SheetClose>
                       {auth.role === "admin" && (
                         <SheetClose asChild>
-                          <Link
-                            href="/admin"
-                            className="flex min-h-[44px] w-full touch-manipulation items-center rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground text-foreground"
-                          >
-                            {t("admin")}
-                          </Link>
+                          <div className="flex min-h-[44px] w-full touch-manipulation items-center rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground">
+                            <Link href="/admin" className="block w-full text-foreground">
+                              {t("admin")}
+                            </Link>
+                          </div>
                         </SheetClose>
                       )}
                       {auth.role === "trainer" && (
                         <SheetClose asChild>
-                          <Link
-                            href="/trainer"
-                            className="flex min-h-[44px] w-full touch-manipulation items-center rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground text-foreground"
-                          >
-                            {t("trainer")}
-                          </Link>
+                          <div className="flex min-h-[44px] w-full touch-manipulation items-center rounded-md px-3 py-2.5 text-sm font-medium hover:bg-accent hover:text-accent-foreground">
+                            <Link href="/trainer" className="block w-full text-foreground">
+                              {t("trainer")}
+                            </Link>
+                          </div>
                         </SheetClose>
                       )}
                       <SheetClose asChild>
@@ -303,9 +336,11 @@ export function Navbar() {
                   </>
                 ) : (
                   <SheetClose asChild>
-                    <Button asChild variant="default" className="mt-4 w-full">
-                      <Link href="/auth/signin">{t("login")}</Link>
-                    </Button>
+                    <div className="mt-4">
+                      <Button asChild variant="default" className="w-full">
+                        <Link href="/auth/signin">{t("login")}</Link>
+                      </Button>
+                    </div>
                   </SheetClose>
                 )}
               </nav>

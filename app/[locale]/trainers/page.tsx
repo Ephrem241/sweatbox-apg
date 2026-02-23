@@ -9,7 +9,7 @@ export default async function TrainersPage() {
 
   const { data, error } = await supabase
     .from("trainer_profiles")
-    .select("id, profile_id, display_name, bio, image_url, specialties, sort_order")
+    .select("id, profile_id, display_name, bio, image_url, specialties, sort_order, instagram_url, facebook_url, twitter_url, tiktok_url, location_id, average_rating, rating_count, locations(name)")
     .order("sort_order", { ascending: true })
     .order("display_name", { ascending: true });
 
